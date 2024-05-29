@@ -1,0 +1,72 @@
+name: Snowflake_CICD
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:   # Add this to trigger the workflow manually
+
+jobs:
+  deploy_tst:
+    runs-on: ubuntu-latest
+    environment: tst
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x' 
+
+      - name: Install schemachange
+        run: pip install schemachange
+
+      - name: Dry Run TST
+        run: schemachange --config-folder ${{ github.workspace }}/cicd/schemachange_config/tst --dry-run
+        env:
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASS }}
+
+      - name: Dry Run Validation TST
+        if: github.event_name == 'push'   # Only wait for manual approval on push
+        uses: trstringer/manual-approval@v1
+        timeout-minutes: 60 
+        with:
+          on-timeout: reject
+
+      - name: Deploy TST
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.event.action == 'manual_approval') # run on manual approval
+        run: schemachange --config-folder ${{ github.workspace }}/cicd/schemachange_config/tst 
+        env:
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASS }}
+  deploy_prd:
+    needs: deploy_tst
+    runs-on: ubuntu-latest
+    environment: prd
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x' 
+
+      - name: Install schemachange
+        run: pip install schemachange
+
+      - name: Dry Run PRD
+        run: schemachange --config-folder ${{ github.workspace }}/cicd/schemachange_config/prd --dry-run
+        env:
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASS }}
+
+      - name: Dry Run Validation PRD
+        if: github.event_name == 'push'  # Only wait for manual approval on push
+        uses: trstringer/manual-approval@v1
+        timeout-minutes: 60
+        with:
+          on-timeout: reject
+
+      - name: Deploy PRD
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.event.action == 'manual_approval')
+        run: schemachange --config-folder ${{ github.workspace }}/cicd/schemachange_config/prd 
+        env:
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASS }}
