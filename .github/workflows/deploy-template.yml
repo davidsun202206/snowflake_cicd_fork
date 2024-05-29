@@ -1,21 +1,33 @@
+name: Snowflake Deployment Template
 
-# This would be a part of a job in your main workflow file
+on:
+  workflow_call:
+    inputs:
+      snowflake_password:
+        required: true
+        type: string
+      dry_run:
+        required: true
+        type: boolean
+        default: false
 
-steps:
-  # Use Python 3.x
-  - name: Use Python 3.x
-    uses: actions/setup-python@v2
-    with:
-      python-version: '3.x'
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
 
-  # Install schemachange
-  - name: Install schemachange
-    run: pip install schemachange
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x' 
 
-  # Run Deployment
-  - name: Run Deployment
-    run: schemachange --config-folder ${{ github.workspace }}/cicd/schemachange_config/${{ env.env }} ${{ env.dry_run }}
-    env:
-      SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASS }}
-      dry_run: ${{ github.event.inputs.dry_run }}
-    working-directory: ${{ github.workspace }}
+      - name: Install schemachange
+        run: pip install schemachange
+
+      - name: Run Deployment
+        run: schemachange --config-folder ${{ github.workspace }}/cicd/schemachange_config/${{ env.ENVIRONMENT }} ${{env.DRYRUN}} 
+        env:
+          SNOWFLAKE_PASSWORD: ${{ inputs.snowflake_password }}
+          ENVIRONMENT: ${{ github.event.inputs.environment }}  # Pass the environment from the main workflow
+          DRYRUN: ${{ github.event.inputs.dry_run }}
