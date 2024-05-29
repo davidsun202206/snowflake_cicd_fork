@@ -4,7 +4,7 @@ name: Snowflake_CI_CD
 on:
   push:
     branches:
-      - main
+      - test
 
 jobs:
   deploy_tst:
