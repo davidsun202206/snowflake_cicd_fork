@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      
   workflow_dispatch:   # Add this to trigger the workflow manually
 
 jobs:
@@ -26,7 +27,7 @@ jobs:
           SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE_QUT }}
           SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE_QUT }}
           SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE_QUT }}
-          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASS }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD_QUT }}
         run: |
           pip install schemachange
-          schemachange -f $GITHUB_WORKSPACE/scripts -a $SNOWFLAKE_ACCOUNT -u $SNOWFLAKE_USERNAME -r $SNOWFLAKE_ROLE -w $SNOWFLAKE_WAREHOUSE -d $SNOWFLAKE_DATABASE -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
+          schemachange -f $GITHUB_WORKSPACE -a $SNOWFLAKE_ACCOUNT -u $SNOWFLAKE_USERNAME -r $SNOWFLAKE_ROLE -w $SNOWFLAKE_WAREHOUSE -d $SNOWFLAKE_DATABASE -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
