@@ -5,7 +5,8 @@ on:
   push:
     branches:
       - test
-
+  workflow_dispatch:
+  
 jobs:
   deploy_tst:
     runs-on: ubuntu-latest
