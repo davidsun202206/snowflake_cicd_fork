@@ -10,7 +10,7 @@ jobs:
   deploy_tst:
     runs-on: ubuntu-latest
     env:
-      env: tst
+      environment: tst
     steps:
       # Checkout the repository
       - name: Retrieve repository
@@ -21,7 +21,7 @@ jobs:
         uses: ./.github/workflows/deploy-template.yaml
         with:
           snowflake_password: ${{ secrets.SNOWFLAKE_PASS }}
-          dry_run: '--dry-run'
+          dry_run: true
       
       # Wait for manual validation of dry run
       - name: Dry Run Validation TST
@@ -29,6 +29,7 @@ jobs:
       
       # Run deployment
       - name: Deploy TST
+        if: github.event_name == 'workflow_dispatch'
         uses: ./.github/workflows/deploy-template.yaml
         with:
           snowflake_password: ${{ secrets.SNOWFLAKE_PASS }}
@@ -38,7 +39,7 @@ jobs:
     needs: deploy_tst
     runs-on: ubuntu-latest
     env:
-      env: prd
+      environment: prd
     steps:
       # Checkout the repository
       - uses: actions/checkout@v2
@@ -48,7 +49,7 @@ jobs:
         uses: ./.github/workflows/deploy-template.yaml
         with:
           snowflake_password: ${{ secrets.SNOWFLAKE_PASS }}
-          dry_run: '--dry-run'
+          dry_run: true
       
       # Wait for manual validation of dry run
       - name: Dry Run Validation PRD
@@ -56,7 +57,8 @@ jobs:
       
       # Run deployment
       - name: Deploy PRD
+        if: github.event_name == 'workflow_dispatch'
         uses: ./.github/workflows/wait-template.yaml
         with:
           snowflake_password: ${{ secrets.SNOWFLAKE_PASS }}
-          dry_run: ''
+          dry_run: false
