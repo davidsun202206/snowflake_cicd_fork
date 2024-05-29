@@ -18,18 +18,18 @@ jobs:
       
       # Run dry run
       - name: Dry Run TST
-        uses: ./templates/deploy-template.yaml
+        uses: ./.github/workflows/deploy-template.yaml
         with:
           snowflake_password: ${{ secrets.SNOWFLAKE_PASS }}
           dry_run: '--dry-run'
       
       # Wait for manual validation of dry run
       - name: Dry Run Validation TST
-        uses: ./templates/wait-template.yaml
+        uses: ./.github/workflows/wait-template.yaml
       
       # Run deployment
       - name: Deploy TST
-        uses: ./templates/deploy-template.yaml
+        uses: ./.github/workflows/deploy-template.yaml
         with:
           snowflake_password: ${{ secrets.SNOWFLAKE_PASS }}
           dry_run: ''
@@ -56,7 +56,7 @@ jobs:
       
       # Run deployment
       - name: Deploy PRD
-        uses: ./.github/workflows/deploy-template.yaml
+        uses: ./.github/workflows/wait-template.yaml
         with:
           snowflake_password: ${{ secrets.SNOWFLAKE_PASS }}
           dry_run: ''
