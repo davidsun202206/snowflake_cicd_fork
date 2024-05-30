@@ -3,7 +3,7 @@ name: Snowflake_CICD
 on:
   push:
     branches:
-      - test
+      - main
       
   workflow_dispatch:   # Add this to trigger the workflow manually
 
@@ -28,6 +28,31 @@ jobs:
           SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE_QUT }}
           SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE_QUT }}
           SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD_QUT }}
+        run: |
+          pip install schemachange
+          schemachange -f $GITHUB_WORKSPACE -a $SNOWFLAKE_ACCOUNT -u $SNOWFLAKE_USERNAME -r $SNOWFLAKE_ROLE -w $SNOWFLAKE_WAREHOUSE -d $SNOWFLAKE_DATABASE -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
+          
+  deploy_prd:
+    needs: deploy_tst
+    runs-on: ubuntu-latest
+    environment: prd
+    steps:
+      - name: Retrieve repository
+        uses: actions/checkout@v2
+      
+      - name: Use Python 3.8.x
+        uses: actions/setup-python@v2.2.1
+        with:
+          python-version: 3.8.x
+
+      - name: Deploy PRD
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT_PRD }}
+          SNOWFLAKE_USERNAME: ${{ secrets.SNOWFLAKE_USERNAME_PRD }}
+          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE_PRD }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE_PRD }}
+          SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE_PRD }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD_PRD }}
         run: |
           pip install schemachange
           schemachange -f $GITHUB_WORKSPACE -a $SNOWFLAKE_ACCOUNT -u $SNOWFLAKE_USERNAME -r $SNOWFLAKE_ROLE -w $SNOWFLAKE_WAREHOUSE -d $SNOWFLAKE_DATABASE -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
