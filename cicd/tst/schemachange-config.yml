@@ -3,6 +3,7 @@ config-version: 1
 root-folder: 'scripts/'
 modules-folder: null
 snowflake-account: 'fn75861.west-us-2' # for example: XXXXX.west-us.azure
+snowflake-password: '{{ env_var("SNOWFLAKE_PASSWORD") }}'
 snowflake-user: 'TESTUSER'
 snowflake-role: 'ACCOUNTADMIN'
 snowflake-warehouse: 'COMPUTE_WH'
