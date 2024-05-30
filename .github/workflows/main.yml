@@ -13,10 +13,10 @@ jobs:
     environment: tst
     steps:
       - name: Retrieve repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       
       - name: Use Python 3.8.x
-        uses: actions/setup-python@v2.2.1
+        uses: actions/setup-python@v4
         with:
           python-version: 3.8.x
 
@@ -38,10 +38,10 @@ jobs:
     environment: prd
     steps:
       - name: Retrieve repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       
       - name: Use Python 3.8.x
-        uses: actions/setup-python@v2.2.1
+        uses: actions/setup-python@v4
         with:
           python-version: 3.8.x
 
