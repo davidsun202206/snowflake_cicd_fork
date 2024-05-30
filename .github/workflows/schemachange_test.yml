@@ -1,0 +1,46 @@
+name: Schemachange_CICD
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Allow manual triggering of the workflow
+
+jobs:
+  deploy_tst:
+    runs-on: ubuntu-latest
+    environment: tst
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: pip install schemachange
+
+      - name: Deploy to TST
+        run: |
+          schemachange deploy --config-folder ${{ github.workspace }}/cicd/tst
+
+  # deploy_prod:
+  #   runs-on: ubuntu-latest
+  #   environment: prod
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v2
+
+  #     - name: Set up Python 3.8
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: '3.8'
+
+  #     - name: Install dependencies
+  #       run: pip install schemachange
+
+  #     - name: Deploy to PROD
+  #       run: |
+  #         schemachange deploy --config-folder ${{ github.workspace }}/cicd/prod
