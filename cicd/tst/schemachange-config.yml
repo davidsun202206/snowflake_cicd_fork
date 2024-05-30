@@ -1,0 +1,15 @@
+
+config-version: 1
+root-folder: 'scripts/'
+modules-folder: null
+snowflake-account: 'fn75861.west-us-2' # for example: XXXXX.west-us.azure
+snowflake-user: 'TESTUSER'
+snowflake-role: 'ACCOUNTADMIN'
+snowflake-warehouse: 'COMPUTE_WH'
+snowflake-database: 'SANDBOX'
+snowflake-schema: 'EDW'
+# Used to override the default name of the change history table (the default is METADATA.SCHEMACHANGE.CHANGE_HISTORY)
+change-history-table: null
+create-change-history-table: false
+autocommit: false
+verbose: true
