@@ -25,7 +25,9 @@ jobs:
       - name: Deploy to TST
         env:
           SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-        run: schemachange deploy --config-folder ${{ github.workspace }}/cicd/tst
+        run: |
+          export SNOWFLAKE_PASSWORD=${{ secrets.SNOWFLAKE_PASSWORD }}
+          schemachange deploy --config-folder ${{ github.workspace }}/cicd/tst
 
   # deploy_prod:
   #   runs-on: ubuntu-latest
