@@ -26,7 +26,7 @@ jobs:
         env:
           SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASS }}
         run: |
-          schemachange --config-file ${{ github.workspace }}/cicd/schemachange-config-test.yml
+          schemachange --config-folder ${{ github.workspace }}/cicd
 
   # deploy_prd:
   #   needs: deploy_tst
