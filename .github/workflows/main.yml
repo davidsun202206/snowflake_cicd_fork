@@ -3,7 +3,7 @@ name: Snowflake_CICD
 on:
   push:
     branches:
-      - main
+      - test
       
   workflow_dispatch:   # Add this to trigger the workflow manually
 
