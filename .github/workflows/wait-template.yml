@@ -1,11 +1,11 @@
-# wait
+# # wait
 
-steps:
-  - name: Manual Validation
-    uses: softprops/action-gh-release@v1
-    with:
-      draft: true
-      prerelease: true
-      body: |
-        Please validate the output from the "Run Deployment --dry-run" step and resume.
-        This release will be marked as final once approved.
+# steps:
+#   - name: Manual Validation
+#     uses: softprops/action-gh-release@v1
+#     with:
+#       draft: true
+#       prerelease: true
+#       body: |
+#         Please validate the output from the "Run Deployment --dry-run" step and resume.
+#         This release will be marked as final once approved.
