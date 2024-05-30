@@ -23,7 +23,12 @@ jobs:
         run: pip install schemachange
 
       - name: Deploy to TST
+        env:
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASS }}
         run: |
+          # Export the password as an environment variable
+          export SNOWFLAKE_PASSWORD=${{ secrets.SNOWFLAKE_PASS }}
+          # Run schemachange with the config folder
           schemachange deploy --config-folder ${{ github.workspace }}/cicd/tst
 
   # deploy_prod:
@@ -42,5 +47,10 @@ jobs:
   #       run: pip install schemachange
 
   #     - name: Deploy to PROD
+  #       env:
+  #         SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASS }}
   #       run: |
+  #         # Export the password as an environment variable
+  #         export SNOWFLAKE_PASSWORD=${{ secrets.SNOWFLAKE_PASS }}
+  #         # Run schemachange with the config folder
   #         schemachange deploy --config-folder ${{ github.workspace }}/cicd/prod
