@@ -33,7 +33,9 @@ jobs:
           schemachange -f $GITHUB_WORKSPACE -a $SNOWFLAKE_ACCOUNT -u $SNOWFLAKE_USERNAME -r $SNOWFLAKE_ROLE -w $SNOWFLAKE_WAREHOUSE -d $SNOWFLAKE_DATABASE -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
       
       - name: Update QUT branch
+        if: github.ref == 'refs/heads/dev'
         run: |
+          git fetch --all
           git checkout qut
           git merge dev
           git push origin qut
