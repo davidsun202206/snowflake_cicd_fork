@@ -1,4 +1,4 @@
-name: wf_schemachange
+name: wf_test3
 
 on:
   push:
