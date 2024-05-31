@@ -37,7 +37,7 @@ jobs:
         run: |
           git fetch --all
           git checkout qut
-          git merge dev
+          git merge dev --allow-unrelated-histories
           git push origin qut
 
   deploy_qut:
