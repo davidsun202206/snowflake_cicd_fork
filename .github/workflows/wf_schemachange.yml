@@ -32,13 +32,13 @@ jobs:
           pip install schemachange
           schemachange -f $GITHUB_WORKSPACE -a $SNOWFLAKE_ACCOUNT -u $SNOWFLAKE_USERNAME -r $SNOWFLAKE_ROLE -w $SNOWFLAKE_WAREHOUSE -d $SNOWFLAKE_DATABASE -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
       
-      - name: Update QUT branch
-        if: github.ref == 'refs/heads/dev'
-        run: |
-          git fetch --all
-          git checkout qut
-          git merge dev --allow-unrelated-histories
-          git push origin qut
+      # - name: Update QUT branch
+      #   if: github.ref == 'refs/heads/dev'
+      #   run: |
+      #     git fetch --all
+      #     git checkout qut
+      #     git merge dev --allow-unrelated-histories
+      #     git push origin qut
 
   deploy_qut:
     if: github.ref == 'refs/heads/qut'
