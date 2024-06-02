@@ -65,8 +65,8 @@ jobs:
 
       - name: Notify success
         if: success()
-        run: echo "${{ inputs.environment | upper }} deployment succeeded!"
+        run: echo "${{ inputs.environment }} deployment succeeded!"
 
       - name: Notify failure
         if: failure()
-        run: echo "${{ inputs.environment | upper }} deployment failed!"
+        run: echo "${{ inputs.environment }} deployment failed!"
