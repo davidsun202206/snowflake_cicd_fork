@@ -3,9 +3,9 @@ name: wf_test3
 on:
   push:
     branches:
-      - dev
-      - qut
-      - prd
+      - devv
+      - qutt
+      - prdd
   workflow_dispatch:
 
 jobs:
