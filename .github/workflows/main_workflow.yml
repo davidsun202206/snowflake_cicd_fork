@@ -3,7 +3,7 @@ name: Snowflake_CICD_all env
 on:
   push:
     branches:
-      - dev
+      - devv
   workflow_dispatch:
 
 jobs:
