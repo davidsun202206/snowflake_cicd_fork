@@ -26,14 +26,32 @@ jobs:
         run: |
           pip install schemachange
 
+      - name: Set environment secrets
+        run: |
+          if [ "${{ inputs.environment }}" == "dev" ]; then
+            echo "SNOWFLAKE_ACCOUNT=${{ secrets.SNOWFLAKE_ACCOUNT_DEV }}" >> $GITHUB_ENV
+            echo "SNOWFLAKE_USERNAME=${{ secrets.SNOWFLAKE_USERNAME_DEV }}" >> $GITHUB_ENV
+            echo "SNOWFLAKE_ROLE=${{ secrets.SNOWFLAKE_ROLE_DEV }}" >> $GITHUB_ENV
+            echo "SNOWFLAKE_WAREHOUSE=${{ secrets.SNOWFLAKE_WAREHOUSE_DEV }}" >> $GITHUB_ENV
+            echo "SNOWFLAKE_DATABASE=${{ secrets.SNOWFLAKE_DATABASE_DEV }}" >> $GITHUB_ENV
+            echo "SNOWFLAKE_PASSWORD=${{ secrets.SNOWFLAKE_PASSWORD_DEV }}" >> $GITHUB_ENV
+          elif [ "${{ inputs.environment }}" == "qut" ]; then
+            echo "SNOWFLAKE_ACCOUNT=${{ secrets.SNOWFLAKE_ACCOUNT_QUT }}" >> $GITHUB_ENV
+            echo "SNOWFLAKE_USERNAME=${{ secrets.SNOWFLAKE_USERNAME_QUT }}" >> $GITHUB_ENV
+            echo "SNOWFLAKE_ROLE=${{ secrets.SNOWFLAKE_ROLE_QUT }}" >> $GITHUB_ENV
+            echo "SNOWFLAKE_WAREHOUSE=${{ secrets.SNOWFLAKE_WAREHOUSE_QUT }}" >> $GITHUB_ENV
+            echo "SNOWFLAKE_DATABASE=${{ secrets.SNOWFLAKE_DATABASE_QUT }}" >> $GITHUB_ENV
+            echo "SNOWFLAKE_PASSWORD=${{ secrets.SNOWFLAKE_PASSWORD_QUT }}" >> $GITHUB_ENV
+          elif [ "${{ inputs.environment }}" == "prd" ]; then
+            echo "SNOWFLAKE_ACCOUNT=${{ secrets.SNOWFLAKE_ACCOUNT_PRD }}" >> $GITHUB_ENV
+            echo "SNOWFLAKE_USERNAME=${{ secrets.SNOWFLAKE_USERNAME_PRD }}" >> $GITHUB_ENV
+            echo "SNOWFLAKE_ROLE=${{ secrets.SNOWFLAKE_ROLE_PRD }}" >> $GITHUB_ENV
+            echo "SNOWFLAKE_WAREHOUSE=${{ secrets.SNOWFLAKE_WAREHOUSE_PRD }}" >> $GITHUB_ENV
+            echo "SNOWFLAKE_DATABASE=${{ secrets.SNOWFLAKE_DATABASE_PRD }}" >> $GITHUB_ENV
+            echo "SNOWFLAKE_PASSWORD=${{ secrets.SNOWFLAKE_PASSWORD_PRD }}" >> $GITHUB_ENV
+          fi
+
       - name: Deploy to ${{ inputs.environment }}
-        env:
-          SNOWFLAKE_ACCOUNT: ${{ inputs.environment == 'dev' && secrets.SNOWFLAKE_ACCOUNT_DEV || inputs.environment == 'qut' && secrets.SNOWFLAKE_ACCOUNT_QUT || secrets.SNOWFLAKE_ACCOUNT_PRD }}
-          SNOWFLAKE_USERNAME: ${{ inputs.environment == 'dev' && secrets.SNOWFLAKE_USERNAME_DEV || inputs.environment == 'qut' && secrets.SNOWFLAKE_USERNAME_QUT || secrets.SNOWFLAKE_USERNAME_PRD }}
-          SNOWFLAKE_ROLE: ${{ inputs.environment == 'dev' && secrets.SNOWFLAKE_ROLE_DEV || inputs.environment == 'qut' && secrets.SNOWFLAKE_ROLE_QUT || secrets.SNOWFLAKE_ROLE_PRD }}
-          SNOWFLAKE_WAREHOUSE: ${{ inputs.environment == 'dev' && secrets.SNOWFLAKE_WAREHOUSE_DEV || inputs.environment == 'qut' && secrets.SNOWFLAKE_WAREHOUSE_QUT || secrets.SNOWFLAKE_WAREHOUSE_PRD }}
-          SNOWFLAKE_DATABASE: ${{ inputs.environment == 'dev' && secrets.SNOWFLAKE_DATABASE_DEV || inputs.environment == 'qut' && secrets.SNOWFLAKE_DATABASE_QUT || secrets.SNOWFLAKE_DATABASE_PRD }}
-          SNOWFLAKE_PASSWORD: ${{ inputs.environment == 'dev' && secrets.SNOWFLAKE_PASSWORD_DEV || inputs.environment == 'qut' && secrets.SNOWFLAKE_PASSWORD_QUT || secrets.SNOWFLAKE_PASSWORD_PRD }}
         run: |
           schemachange -f $GITHUB_WORKSPACE -a $SNOWFLAKE_ACCOUNT -u $SNOWFLAKE_USERNAME -r $SNOWFLAKE_ROLE -w $SNOWFLAKE_WAREHOUSE -d $SNOWFLAKE_DATABASE -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
 
