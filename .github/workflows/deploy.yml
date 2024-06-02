@@ -29,27 +29,27 @@ jobs:
       - name: Set environment secrets
         id: set-secrets
         run: |
-          if [[ "${{ inputs.environment }}" == "dev" ]]; then
-            echo "SNOWFLAKE_ACCOUNT=${{ secrets.SNOWFLAKE_ACCOUNT_DEV }}" >> $GITHUB_ENV
-            echo "SNOWFLAKE_USERNAME=${{ secrets.SNOWFLAKE_USERNAME_DEV }}" >> $GITHUB_ENV
-            echo "SNOWFLAKE_ROLE=${{ secrets.SNOWFLAKE_ROLE_DEV }}" >> $GITHUB_ENV
-            echo "SNOWFLAKE_WAREHOUSE=${{ secrets.SNOWFLAKE_WAREHOUSE_DEV }}" >> $GITHUB_ENV
-            echo "SNOWFLAKE_DATABASE=${{ secrets.SNOWFLAKE_DATABASE_DEV }}" >> $GITHUB_ENV
-            echo "SNOWFLAKE_PASSWORD=${{ secrets.SNOWFLAKE_PASSWORD_DEV }}" >> $GITHUB_ENV
-          elif [[ "${{ inputs.environment }}" == "qut" ]]; then
-            echo "SNOWFLAKE_ACCOUNT=${{ secrets.SNOWFLAKE_ACCOUNT_QUT }}" >> $GITHUB_ENV
-            echo "SNOWFLAKE_USERNAME=${{ secrets.SNOWFLAKE_USERNAME_QUT }}" >> $GITHUB_ENV
-            echo "SNOWFLAKE_ROLE=${{ secrets.SNOWFLAKE_ROLE_QUT }}" >> $GITHUB_ENV
-            echo "SNOWFLAKE_WAREHOUSE=${{ secrets.SNOWFLAKE_WAREHOUSE_QUT }}" >> $GITHUB_ENV
-            echo "SNOWFLAKE_DATABASE=${{ secrets.SNOWFLAKE_DATABASE_QUT }}" >> $GITHUB_ENV
-            echo "SNOWFLAKE_PASSWORD=${{ secrets.SNOWFLAKE_PASSWORD_QUT }}" >> $GITHUB_ENV
-          elif [[ "${{ inputs.environment }}" == "prd" ]]; then
-            echo "SNOWFLAKE_ACCOUNT=${{ secrets.SNOWFLAKE_ACCOUNT_PRD }}" >> $GITHUB_ENV
-            echo "SNOWFLAKE_USERNAME=${{ secrets.SNOWFLAKE_USERNAME_PRD }}" >> $GITHUB_ENV
-            echo "SNOWFLAKE_ROLE=${{ secrets.SNOWFLAKE_ROLE_PRD }}" >> $GITHUB_ENV
-            echo "SNOWFLAKE_WAREHOUSE=${{ secrets.SNOWFLAKE_WAREHOUSE_PRD }}" >> $GITHUB_ENV
-            echo "SNOWFLAKE_DATABASE=${{ secrets.SNOWFLAKE_DATABASE_PRD }}" >> $GITHUB_ENV
-            echo "SNOWFLAKE_PASSWORD=${{ secrets.SNOWFLAKE_PASSWORD_PRD }}" >> $GITHUB_ENV
+          if [ "${{ inputs.environment }}" == "dev" ]; then
+            SNOWFLAKE_ACCOUNT=${{ secrets.SNOWFLAKE_ACCOUNT_DEV }}
+            SNOWFLAKE_USERNAME=${{ secrets.SNOWFLAKE_USERNAME_DEV }}
+            SNOWFLAKE_ROLE=${{ secrets.SNOWFLAKE_ROLE_DEV }}
+            SNOWFLAKE_WAREHOUSE=${{ secrets.SNOWFLAKE_WAREHOUSE_DEV }}
+            SNOWFLAKE_DATABASE=${{ secrets.SNOWFLAKE_DATABASE_DEV }}
+            SNOWFLAKE_PASSWORD=${{ secrets.SNOWFLAKE_PASSWORD_DEV }}
+          elif [ "${{ inputs.environment }}" == "qut" ]; then
+            SNOWFLAKE_ACCOUNT=${{ secrets.SNOWFLAKE_ACCOUNT_QUT }}
+            SNOWFLAKE_USERNAME=${{ secrets.SNOWFLAKE_USERNAME_QUT }}
+            SNOWFLAKE_ROLE=${{ secrets.SNOWFLAKE_ROLE_QUT }}
+            SNOWFLAKE_WAREHOUSE=${{ secrets.SNOWFLAKE_WAREHOUSE_QUT }}
+            SNOWFLAKE_DATABASE=${{ secrets.SNOWFLAKE_DATABASE_QUT }}
+            SNOWFLAKE_PASSWORD=${{ secrets.SNOWFLAKE_PASSWORD_QUT }}
+          elif [ "${{ inputs.environment }}" == "prd" ]; then
+            SNOWFLAKE_ACCOUNT=${{ secrets.SNOWFLAKE_ACCOUNT_PRD }}
+            SNOWFLAKE_USERNAME=${{ secrets.SNOWFLAKE_USERNAME_PRD }}
+            SNOWFLAKE_ROLE=${{ secrets.SNOWFLAKE_ROLE_PRD }}
+            SNOWFLAKE_WAREHOUSE=${{ secrets.SNOWFLAKE_WAREHOUSE_PRD }}
+            SNOWFLAKE_DATABASE=${{ secrets.SNOWFLAKE_DATABASE_PRD }}
+            SNOWFLAKE_PASSWORD=${{ secrets.SNOWFLAKE_PASSWORD_PRD }}
           fi
 
       - name: Deploy to ${{ inputs.environment}}
