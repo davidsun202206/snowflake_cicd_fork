@@ -1,4 +1,4 @@
-name: Snowflake_CICD_NEW
+name: Snowflake_CICD_all env
 
 on:
   push:
