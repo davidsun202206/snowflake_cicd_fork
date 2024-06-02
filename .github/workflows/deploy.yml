@@ -1,0 +1,45 @@
+name: Deploy to Snowflake
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        description: "Environment"
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8.x
+
+      - name: Install dependencies
+        run: |
+          pip install schemachange
+
+      - name: Deploy to Snowflake
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets['SNOWFLAKE_ACCOUNT_' + inputs.environment] }}
+          SNOWFLAKE_USERNAME: ${{ secrets['SNOWFLAKE_USERNAME_' + inputs.environment] }}
+          SNOWFLAKE_ROLE: ${{ secrets['SNOWFLAKE_ROLE_' + inputs.environment] }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets['SNOWFLAKE_WAREHOUSE_' + inputs.environment] }}
+          SNOWFLAKE_DATABASE: ${{ secrets['SNOWFLAKE_DATABASE_' + inputs.environment] }}
+          SNOWFLAKE_PASSWORD: ${{ secrets['SNOWFLAKE_PASSWORD_' + inputs.environment] }}
+        run: |
+          schemachange -f $GITHUB_WORKSPACE -a $SNOWFLAKE_ACCOUNT -u $SNOWFLAKE_USERNAME -r $SNOWFLAKE_ROLE -w $SNOWFLAKE_WAREHOUSE -d $SNOWFLAKE_DATABASE -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
+
+      - name: Notify success
+        if: success()
+        run: echo "${{ inputs.environment }} deployment succeeded!"
+
+      - name: Notify failure
+        if: failure()
+        run: echo "${{ inputs.environment }} deployment failed!"

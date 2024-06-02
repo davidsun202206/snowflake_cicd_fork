@@ -3,7 +3,7 @@ name: Snowflake All ENV
 on:
   push:
     branches:
-      - dev
+      - devv
   workflow_dispatch:
 
 jobs:

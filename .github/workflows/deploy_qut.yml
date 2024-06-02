@@ -1,6 +1,6 @@
 name: Deploy to QUT
 
-on: workflow_call
+on: workflow_dispatch
 
 jobs:
   deploy_qut:
