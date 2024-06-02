@@ -52,7 +52,7 @@ jobs:
             echo "SNOWFLAKE_PASSWORD=${{ secrets.SNOWFLAKE_PASSWORD_PRD }}" >> $GITHUB_ENV
           fi
 
-      - name: Deploy to ${{ inputs.environment | upper }}
+      - name: Deploy to ${{ inputs.environment}}
         env:
           SNOWFLAKE_ACCOUNT: ${{ env.SNOWFLAKE_ACCOUNT }}
           SNOWFLAKE_USERNAME: ${{ env.SNOWFLAKE_USERNAME }}
