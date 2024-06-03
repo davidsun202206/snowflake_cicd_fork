@@ -30,9 +30,10 @@ jobs:
         run: |
           pip install schemachange
           schemachange -f $GITHUB_WORKSPACE -a $SNOWFLAKE_ACCOUNT -u $SNOWFLAKE_USERNAME -r $SNOWFLAKE_ROLE -w $SNOWFLAKE_WAREHOUSE -d $SNOWFLAKE_DATABASE -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
-          for dir in $(find $GITHUB_WORKSPACE -type d); do
+          for dir in $(find $GITHUB_WORKSPACE -maxdepth 1 -type d); do
             echo $dir
           done
+
 
   deploy_qut:
     if: github.ref == 'refs/heads/dev'  # Change this to manually trigger or depend on dev job
