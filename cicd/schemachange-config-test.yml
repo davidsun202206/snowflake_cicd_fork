@@ -12,3 +12,4 @@ change-history-table: null
 create-change-history-table: false
 autocommit: false
 verbose: true
+test: true
