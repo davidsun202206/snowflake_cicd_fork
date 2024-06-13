@@ -1,9 +1,9 @@
 name: Snowflake_CICD_NEW
 
 on:
-  push:
-    branches:
-      - dev
+  # push:
+  #   branches:
+  #     - dev
   workflow_dispatch:   # Allow manual triggering of the workflow
 
 jobs:
