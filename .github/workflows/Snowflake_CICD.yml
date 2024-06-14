@@ -32,13 +32,15 @@ jobs:
           SNOWSQL_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
           SNOWSQL_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
           SNOWSQL_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }} 
-          SUBDIR: ${{ env.subdir }}
+          # SUBDIR: ${{ env.subdir }}
         run: |
           ~/bin/snowsql -f $GITHUB_WORKSPACE/scripts/change_history_table_ddl.sql
           pip install schemachange
           for dir in "$GITHUB_WORKSPACE/scripts"/*/; do
-              subdir=$(basename "$dir")
+              # subdir=$(basename "$dir")
+              echo "subdir=$(basename "$dir")" >> $GITHUB_ENV
               echo "Found project subdirectory: $subdir"
+              
               ~/bin/snowsql -f $GITHUB_WORKSPACE/scripts/change_history_project_table_ddl.sql
               schemachange -f $GITHUB_WORKSPACE/scripts/$subdir -a $SNOWSQL_ACCOUNT -u $SNOWSQL_USER -r $SNOWSQL_ROLE -w $SNOWSQL_WAREHOUSE -d $SNOWSQL_DATABASE -c $SNOWSQL_DATABASE.SCHEMACHANGE.CHANGE_HISTORY_$subdir 
               ~/bin/snowsql -f $GITHUB_WORKSPACE/scripts/merge_change_history.sql
