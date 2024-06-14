@@ -52,7 +52,7 @@ jobs:
           for dir in "$GITHUB_WORKSPACE/scripts"/*/; do
               subdir=$(basename "$dir")
               echo "Found project subdirectory: $subdir"
-              ~/bin/snowsql -q """CREATE TEMPORARY TABLE SCHEMACHANGE.CHANGE_HISTORY_$subdir AS SELECT * FROM SCHEMACHANGE.CHANGE_HISTORY WHERE PROJECT = '$subdir'"""
+              ~/bin/snowsql -q """CREATE OR REPLACE TABLE SCHEMACHANGE.CHANGE_HISTORY_$subdir AS SELECT * FROM SCHEMACHANGE.CHANGE_HISTORY WHERE PROJECT = '$subdir'"""
               schemachange -f $GITHUB_WORKSPACE/scripts/$subdir -a $SNOWSQL_ACCOUNT -u $SNOWSQL_USER -r $SNOWSQL_ROLE -w $SNOWSQL_WAREHOUSE -d $SNOWSQL_DATABASE -c $SNOWSQL_DATABASE.SCHEMACHANGE.CHANGE_HISTORY_$subdir 
               ~/bin/snowsql -q """MERGE INTO SCHEMACHANGE.CHANGE_HISTORY target
                                   USING SCHEMACHANGE.CHANGE_HISTORY_$subdir source 
@@ -90,6 +90,7 @@ jobs:
                                       ,source.INSTALLED_ON
                                       ,'$subdir'
                                       );
+                                      DROP TABLE SCHEMACHANGE.CHANGE_HISTORY_$subdir;
               """
           
           
