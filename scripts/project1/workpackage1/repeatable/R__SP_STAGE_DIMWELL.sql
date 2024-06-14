@@ -25,7 +25,6 @@ DECLARE
 BEGIN
 
 /* TO BE DEFINED/DECLARED BY THE DEVELOPER : START */ 
-/* TO BE DEFINED/DECLARED BY THE DEVELOPER : START */ 
 StagingSchemaName := 'EDWSTAGE';
 StagingTableName := 'DIMWELLACTIVITYDAILY';
 BusinesskeycolString := 'WellActivityDailyGUID';
