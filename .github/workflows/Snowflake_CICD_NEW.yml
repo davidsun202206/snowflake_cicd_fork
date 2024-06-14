@@ -66,13 +66,12 @@ jobs:
               # Extract the subdirectory name
               subdir=$(basename "$dir")
               echo "Found subdirectory: $subdir"
-              ~/bin/snowsql -q """CREATE OR REPLACE TABLE SCHEMACHANGE.CHANGE_HISTORY_$subdir AS SELECT * FROM SCHEMACHANGE.CHANGE_HISTORY WHERE PROJECT = '$subdir';
-                                  ALTER TABLE SCHEMACHANGE.CHANGE_HISTORY_$subdir ALTER COLUMN PROJECT SET DEFAULT '$subdir'"""
+              ~/bin/snowsql -q """CREATE OR REPLACE TABLE SCHEMACHANGE.CHANGE_HISTORY_$subdir AS SELECT * FROM SCHEMACHANGE.CHANGE_HISTORY WHERE PROJECT = '$subdir'"""
               schemachange -f $GITHUB_WORKSPACE/scripts/$subdir -a $SNOWSQL_ACCOUNT -u $SNOWSQL_USER -r $SNOWSQL_ROLE -w $SNOWSQL_WAREHOUSE -d $SNOWSQL_DATABASE -c $SNOWSQL_DATABASE.SCHEMACHANGE.CHANGE_HISTORY_$subdir         
               
               ~/bin/snowsql -q """MERGE INTO SCHEMACHANGE.CHANGE_HISTORY target
                                   USING SCHEMACHANGE.CHANGE_HISTORY_$subdir source 
-                                  ON target.SCRIPT = source.SCRIPT
+                                  ON target.SCRIPT = source.SCRIPT AND target.PROJECT = '$subdir' 
                                   WHEN MATCHED AND (target.SCRIPT_TYPE = 'A' OR (target.SCRIPT_TYPE = 'R' AND target.CHECKSUM != source.CHECKSUM))
                                       THEN UPDATE SET 
                                       target.CHECKSUM = source.CHECKSUM
@@ -80,7 +79,7 @@ jobs:
                                       ,target.STATUS = source.STATUS
                                       ,target.INSTALLED_BY = source.INSTALLED_BY
                                       ,target.INSTALLED_ON = source.INSTALLED_ON
-                                      ,target.PROJECT = source.PROJECT            
+                                      ,target.PROJECT = '$subdir'            
                                   WHEN NOT MATCHED 
                                       THEN INSERT (
                                       VERSION
@@ -104,7 +103,7 @@ jobs:
                                       ,source.STATUS
                                       ,source.INSTALLED_BY
                                       ,source.INSTALLED_ON
-                                      ,source.PROJECT
+                                      ,'$subdir'
                                       );
               """
           
