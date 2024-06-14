@@ -41,10 +41,23 @@ jobs:
           SNOWSQL_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
       
         run: |
+          ~/bin/snowsql -q """CREATE OR REPLACE TABLE SCHEMACHANGE.CHANGE_HISTORY
+                             (
+                              VERSION VARCHAR
+                             ,DESCRIPTION VARCHAR
+                             ,SCRIPT VARCHAR
+                             ,SCRIPT_TYPE VARCHAR
+                             ,CHECKSUM VARCHAR
+                             ,EXECUTION_TIME NUMBER
+                             ,STATUS VARCHAR
+                             ,INSTALLED_BY VARCHAR
+                             ,INSTALLED_ON TIMESTAMP_LTZ
+                             ,PROJECT VARCHAR
+                             );
+                          """
           pip install schemachange
           schemachange -f $GITHUB_WORKSPACE -a $SNOWSQL_ACCOUNT -u $SNOWSQL_USER -r $SNOWSQL_ROLE -w $SNOWSQL_WAREHOUSE -d $SNOWSQL_DATABASE -c $SNOWSQL_DATABASE.SCHEMACHANGE.CHANGE_HISTORY_DEV --create-change-history-table
           echo $GITHUB_WORKSPACE
-          ~/bin/snowsql -q "CREATE TABLE TARGET_SCHEMA.my_table4 (id INT, name STRING);CREATE TABLE TARGET_SCHEMA.my_table5 (id INT, name STRING);"
 
   deploy_qut:
     if: github.ref == 'refs/heads/dev'  # Change this to manually trigger or depend on dev job
