@@ -66,7 +66,7 @@ jobs:
               # Extract the subdirectory name
               subdir=$(basename "$dir")
               echo "Found subdirectory: $subdir"
-              ~/bin/snowsql -q """CREATE OR REPLACE TABLE SCHEMACHANGE.CHANGE_HISTORY_$subdir AS SELECT * FROM SCHEMACHANGE.CHANGE_HISTORY WHERE PROJECT = $subdir;
+              ~/bin/snowsql -q """CREATE OR REPLACE TABLE SCHEMACHANGE.CHANGE_HISTORY_$subdir AS SELECT * FROM SCHEMACHANGE.CHANGE_HISTORY WHERE PROJECT = '$subdir';
                                   ALTER TABLE SCHEMACHANGE.CHANGE_HISTORY_$subdir ALTER COLUMN PROJECT SET DEFAULT $subdir"""
               schemachange -f $GITHUB_WORKSPACE -a $SNOWSQL_ACCOUNT -u $SNOWSQL_USER -r $SNOWSQL_ROLE -w $SNOWSQL_WAREHOUSE -d $SNOWSQL_DATABASE -c $SNOWSQL_DATABASE.SCHEMACHANGE.CHANGE_HISTORY_$subdir         
           done
