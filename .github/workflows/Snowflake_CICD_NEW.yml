@@ -30,6 +30,7 @@ jobs:
         run: |
           pip install schemachange
           schemachange -f $GITHUB_WORKSPACE -a $SNOWFLAKE_ACCOUNT -u $SNOWFLAKE_USERNAME -r $SNOWFLAKE_ROLE -w $SNOWFLAKE_WAREHOUSE -d $SNOWFLAKE_DATABASE -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY_DEV --create-change-history-table
+          echo $GITHUB_WORKSPACE
 
 
   deploy_qut:
