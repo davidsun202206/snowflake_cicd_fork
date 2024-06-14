@@ -39,7 +39,7 @@ jobs:
           for dir in "$GITHUB_WORKSPACE/scripts"/*/; do
               subdir=$(basename "$dir")
               echo "Found project subdirectory: $subdir"
-              FILE_CONTENT2=$(cat $GITHUB_WORKSPACE/scripts/change_history_project_table_ddl.sql)
+              FILE_CONTENT2=$(cat '$GITHUB_WORKSPACE/scripts/change_history_project_table_ddl.sql')
               echo $FILE_CONTENT2
               FILE_CONTENT=$(cat $GITHUB_WORKSPACE/scripts/change_history_project_table_ddl.sql | sed "s/{PROJECT}/$subdir/g")
               echo $FILE_CONTENT
