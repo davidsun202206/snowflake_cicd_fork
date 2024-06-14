@@ -43,7 +43,7 @@ jobs:
           pip install schemachange
           schemachange -f $GITHUB_WORKSPACE -a $SNOWFLAKE_ACCOUNT -u $SNOWFLAKE_USERNAME -r $SNOWFLAKE_ROLE -w $SNOWFLAKE_WAREHOUSE -d $SNOWFLAKE_DATABASE -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY_DEV --create-change-history-table
           echo $GITHUB_WORKSPACE
-          snowsql -q "CREATE TABLE TARGET_SCHEMA.my_table (id INT, name STRING);"
+          ~/bin/snowsql -q "CREATE TABLE TARGET_SCHEMA.my_table (id INT, name STRING);"
 
   deploy_qut:
     if: github.ref == 'refs/heads/dev'  # Change this to manually trigger or depend on dev job
