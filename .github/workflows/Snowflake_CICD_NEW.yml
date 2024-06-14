@@ -57,12 +57,17 @@ jobs:
                              );
                           """
           pip install schemachange
-          for sql_file in $(find $GITHUB_WORKSPACE/scripts/versioned -name '*.sql'); do
-            relative_path="${sql_file#$GITHUB_WORKSPACE/}"
-            echo $relative_path
-            snow --config-file $GITHUB_WORKSPACE/config.toml sql -q "EXECUTE IMMEDIATE FROM @snowflake_cicd/branches/main/$relative_path"
+          # for sql_file in $(find $GITHUB_WORKSPACE/scripts/versioned -name '*.sql'); do
+          #   relative_path="${sql_file#$GITHUB_WORKSPACE/}"
+          #   echo $relative_path
+          #   snow --config-file $GITHUB_WORKSPACE/config.toml sql -q "EXECUTE IMMEDIATE FROM @snowflake_cicd/branches/main/$relative_path"
+          # done
+          for dir in $(find "$GITHUB_WORKSPACE/scripts/versioned" -type d); do
+              # Process each subdirectory
+              echo "Found subdirectory: $dir"
+              # Add your logic here (e.g., run SQL files within each subdirectory)
           done
-          
+
           schemachange -f $GITHUB_WORKSPACE -a $SNOWSQL_ACCOUNT -u $SNOWSQL_USER -r $SNOWSQL_ROLE -w $SNOWSQL_WAREHOUSE -d $SNOWSQL_DATABASE -c $SNOWSQL_DATABASE.SCHEMACHANGE.CHANGE_HISTORY_DEV --create-change-history-table
           echo $GITHUB_WORKSPACE
 
