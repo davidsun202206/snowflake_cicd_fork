@@ -41,7 +41,8 @@ jobs:
           SNOWSQL_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
       
         run: |
-          ~/bin/snowsql -q """CREATE OR REPLACE TABLE SCHEMACHANGE.CHANGE_HISTORY
+          ~/bin/snowsql -q """CREATE SCHEMA IF NOT EXISTS SCHEMACHANGE;
+                              CREATE OR REPLACE TABLE SCHEMACHANGE.CHANGE_HISTORY
                              (
                               VERSION VARCHAR
                              ,DESCRIPTION VARCHAR
