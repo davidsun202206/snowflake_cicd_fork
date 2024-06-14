@@ -34,18 +34,21 @@ jobs:
           SNOWSQL_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }} 
           # SUBDIR: ${{ env.subdir }}
         run: |
-          ~/bin/snowsql -f $GITHUB_WORKSPACE/scripts/change_history_table_ddl.sql
+          ~/bin/snowsql -f $GITHUB_WORKSPACE/scripts/ddl_master_change_history.sql
           pip install schemachange
           for dir in "$GITHUB_WORKSPACE/scripts"/*/; do
               subdir=$(basename "$dir")
               echo "Found project subdirectory: $subdir"
-              project_change_history_query=$(cat "$GITHUB_WORKSPACE/scripts/change_history_project_table_ddl.sql" | sed "s/{PROJECT}/$subdir/g")
-              echo "$project_change_history_query"
-              ~/bin/snowsql -q "$project_change_history_query"
+
+              ddl_project_change_history_query=$(cat "$GITHUB_WORKSPACE/scripts/ddl_project_change_history.sql" | sed "s/{PROJECT}/$subdir/g")
+              echo "$ddl_project_change_history_query"
+              ~/bin/snowsql -q "$ddl_project_change_history_query"
+
               schemachange -f $GITHUB_WORKSPACE/scripts/$subdir -a $SNOWSQL_ACCOUNT -u $SNOWSQL_USER -r $SNOWSQL_ROLE -w $SNOWSQL_WAREHOUSE -d $SNOWSQL_DATABASE -c $SNOWSQL_DATABASE.SCHEMACHANGE.CHANGE_HISTORY_$subdir 
-              merge_change_history_query=$(cat "$GITHUB_WORKSPACE/scripts/merge_change_history.sql" | sed "s/{PROJECT}/$subdir/g")
-              echo "$merge_change_history_query"
-              ~/bin/snowsql -q "$merge_change_history_query"
+              
+              dml_change_history_query=$(cat "$GITHUB_WORKSPACE/scripts/dml_change_history.sql" | sed "s/{PROJECT}/$subdir/g")
+              echo "$dml_change_history_query"
+              ~/bin/snowsql -q "$dml_change_history_query"
           done
 
           
