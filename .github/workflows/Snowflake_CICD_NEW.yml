@@ -18,19 +18,12 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.8.x
-          
-      # - name: Set up SnowSQL
-      #   run: |
-      #     curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-1.2.16-linux_x86_64.bash
-      #     chmod +x snowsql-1.2.16-linux_x86_64.bash
-      #     ./snowsql-1.2.16-linux_x86_64.bash
 
       - name: Install SnowSQL
         run: |
           curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-1.2.9-linux_x86_64.bash
           SNOWSQL_DEST=~/bin SNOWSQL_LOGIN_SHELL=~/.profile bash snowsql-1.2.9-linux_x86_64.bash
-    
-          
+        
       - name: Deploy to DEV
         env:
           SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
@@ -51,7 +44,7 @@ jobs:
           pip install schemachange
           schemachange -f $GITHUB_WORKSPACE -a $SNOWFLAKE_ACCOUNT -u $SNOWFLAKE_USERNAME -r $SNOWFLAKE_ROLE -w $SNOWFLAKE_WAREHOUSE -d $SNOWFLAKE_DATABASE -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY_DEV --create-change-history-table
           echo $GITHUB_WORKSPACE
-          ~/bin/snowsql -q "CREATE TABLE TARGET_SCHEMA.my_table (id INT, name STRING);"
+          ~/bin/snowsql -q "CREATE TABLE TARGET_SCHEMA.my_table2 (id INT, name STRING);CREATE TABLE TARGET_SCHEMA.my_table3 (id INT, name STRING);"
 
   deploy_qut:
     if: github.ref == 'refs/heads/dev'  # Change this to manually trigger or depend on dev job
