@@ -26,20 +26,12 @@ jobs:
         
       - name: Deploy to DEV
         env:
-          # SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          # SNOWFLAKE_USERNAME: ${{ secrets.SNOWFLAKE_USERNAME }}
-          # SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
-          # SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-          # SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
-          # SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-
           SNOWSQL_PWD: ${{ secrets.SNOWFLAKE_PASSWORD }}
           SNOWSQL_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
           SNOWSQL_USER: ${{ secrets.SNOWFLAKE_USERNAME }}
           SNOWSQL_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
           SNOWSQL_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
-          SNOWSQL_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-      
+          SNOWSQL_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }} 
         run: |
           ~/bin/snowsql -q """CREATE SCHEMA IF NOT EXISTS SCHEMACHANGE;
                               CREATE TABLE IF NOT EXISTS SCHEMACHANGE.CHANGE_HISTORY
@@ -57,18 +49,11 @@ jobs:
                              );
                           """
           pip install schemachange
-          # for sql_file in $(find $GITHUB_WORKSPACE/scripts/versioned -name '*.sql'); do
-          #   relative_path="${sql_file#$GITHUB_WORKSPACE/}"
-          #   echo $relative_path
-          #   snow --config-file $GITHUB_WORKSPACE/config.toml sql -q "EXECUTE IMMEDIATE FROM @snowflake_cicd/branches/main/$relative_path"
-          # done
           for dir in "$GITHUB_WORKSPACE/scripts"/*/; do
-              # Extract the subdirectory name
-              subdir=$(basename "$dir")
-              echo "Found subdirectory: $subdir"
-              ~/bin/snowsql -q """CREATE OR REPLACE TABLE SCHEMACHANGE.CHANGE_HISTORY_$subdir AS SELECT * FROM SCHEMACHANGE.CHANGE_HISTORY WHERE PROJECT = '$subdir'"""
-              schemachange -f $GITHUB_WORKSPACE/scripts/$subdir -a $SNOWSQL_ACCOUNT -u $SNOWSQL_USER -r $SNOWSQL_ROLE -w $SNOWSQL_WAREHOUSE -d $SNOWSQL_DATABASE -c $SNOWSQL_DATABASE.SCHEMACHANGE.CHANGE_HISTORY_$subdir         
-              
+              subdir = $(basename "$dir")
+              echo "Found project subdirectory: $subdir"
+              ~/bin/snowsql -q """CREATE TEMPORARY TABLE SCHEMACHANGE.CHANGE_HISTORY_$subdir AS SELECT * FROM SCHEMACHANGE.CHANGE_HISTORY WHERE PROJECT = '$subdir'"""
+              schemachange -f $GITHUB_WORKSPACE/scripts/$subdir -a $SNOWSQL_ACCOUNT -u $SNOWSQL_USER -r $SNOWSQL_ROLE -w $SNOWSQL_WAREHOUSE -d $SNOWSQL_DATABASE -c $SNOWSQL_DATABASE.SCHEMACHANGE.CHANGE_HISTORY_$subdir 
               ~/bin/snowsql -q """MERGE INTO SCHEMACHANGE.CHANGE_HISTORY target
                                   USING SCHEMACHANGE.CHANGE_HISTORY_$subdir source 
                                   ON target.SCRIPT = source.SCRIPT AND target.PROJECT = '$subdir' 
