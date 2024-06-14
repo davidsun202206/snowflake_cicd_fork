@@ -1,6 +1,6 @@
 MERGE INTO SCHEMACHANGE.CHANGE_HISTORY target
-USING SCHEMACHANGE.CHANGE_HISTORY_$subdir source 
-ON target.SCRIPT = source.SCRIPT AND target.PROJECT = {PROJECT} 
+USING SCHEMACHANGE.CHANGE_HISTORY_{PROJECT} source 
+ON target.SCRIPT = source.SCRIPT AND target.PROJECT = '{PROJECT}' 
 WHEN MATCHED AND (target.SCRIPT_TYPE = 'A' OR (target.SCRIPT_TYPE = 'R' AND target.CHECKSUM != source.CHECKSUM))
     THEN UPDATE SET 
     target.CHECKSUM = source.CHECKSUM
@@ -8,7 +8,7 @@ WHEN MATCHED AND (target.SCRIPT_TYPE = 'A' OR (target.SCRIPT_TYPE = 'R' AND targ
     ,target.STATUS = source.STATUS
     ,target.INSTALLED_BY = source.INSTALLED_BY
     ,target.INSTALLED_ON = source.INSTALLED_ON
-    ,target.PROJECT = {PROJECT}           
+    ,target.PROJECT = '{PROJECT}'       
 WHEN NOT MATCHED 
     THEN INSERT (
     VERSION
@@ -32,6 +32,6 @@ WHEN NOT MATCHED
     ,source.STATUS
     ,source.INSTALLED_BY
     ,source.INSTALLED_ON
-    ,{PROJECT} 
+    ,'{PROJECT}' 
     );
     DROP TABLE SCHEMACHANGE.CHANGE_HISTORY_{PROJECT};
