@@ -23,7 +23,6 @@ DECLARE
   InsertCount INT := 0;
   Res RESULTSET;
 BEGIN
-
 /* TO BE DEFINED/DECLARED BY THE DEVELOPER : START */ 
 StagingSchemaName := 'EDWSTAGE';
 StagingTableName := 'DIMWELLACTIVITYDAILY';
